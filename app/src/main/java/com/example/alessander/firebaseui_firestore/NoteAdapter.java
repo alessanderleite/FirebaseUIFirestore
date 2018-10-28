@@ -12,15 +12,15 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteAdapter.NoteHolder> {
 
-    public NoteAdapter(FirestoreRecyclerOptions<Note> options) {
+    public NoteAdapter(@NonNull FirestoreRecyclerOptions<Note> options) {
         super(options);
     }
 
     @Override
-    protected void onBindViewHolder(NoteHolder holder, int position, Note model) {
+    protected void onBindViewHolder(@NonNull NoteHolder holder, int position, @NonNull Note model) {
         holder.textViewTitle.setText(model.getTitle());
         holder.textViewDescription.setText(model.getDescription());
-        holder.textViewPriority.setText(model.getPriority());
+        holder.textViewPriority.setText(String.valueOf(model.getPriority()));
     }
 
     @NonNull
