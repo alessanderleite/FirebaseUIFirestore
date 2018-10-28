@@ -8,10 +8,14 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -26,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Log.e("ERROR: ", "Iniciando Aplicação");
+
         FloatingActionButton buttonAddNote = findViewById(R.id.button_add_note);
         buttonAddNote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUpRecyclerView() {
         Query query = notebookRef.orderBy("priority", Query.Direction.DESCENDING);
+
 
         FirestoreRecyclerOptions<Note> options = new FirestoreRecyclerOptions.Builder<Note>()
                 .setQuery(query, Note.class)
@@ -63,6 +70,17 @@ public class MainActivity extends AppCompatActivity {
                 adapter.deleteItem(viewHolder.getAdapterPosition());
             }
         }).attachToRecyclerView(recyclerView);
+
+        adapter.setOnItemClickListener(new NoteAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
+                Note note = documentSnapshot.toObject(Note.class);
+                String id = documentSnapshot.getId();
+                String path = documentSnapshot.getReference().getPath();
+                Toast.makeText(MainActivity.this,
+                        "Position: " + position + " ID: " + id, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
